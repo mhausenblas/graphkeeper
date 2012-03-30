@@ -69,7 +69,7 @@ class GraphKeeper(object):
 if __name__ == '__main__':
 	gk = GraphKeeper()
 	
-	print 'Set up of Simple RDF Store ...'
+	print 'Set up of GraphKeeper ...'
 	gk.set_up()
 	
 	gk.put_ng('/ng', '<http://data.example.org/person/tim> dc:publisher "Tim" .')
