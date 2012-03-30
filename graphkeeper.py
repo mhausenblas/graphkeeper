@@ -1,4 +1,15 @@
-import zookeeper, threading, sys
+"""
+GraphKeeper
+Michael Hausenblas, DERI
+Public Domain
+Documentation: 
+  https://github.com/mhausenblas/graphkeeper
+
+Command line usage: 
+   python graphkeeper.py <URI> - parses data from URI as N-Triples and loads it into the store
+"""
+import zookeeper, threading, ntriples, sys
+from pprint import pprint
 
 ZOO_OPEN_ACL_UNSAFE = {"perms":0x1f, "scheme":"world", "id" :"anyone"};
 
@@ -49,12 +60,15 @@ class GraphKeeper(object):
 		zookeeper.create(self.handle, ng, val, [ZOO_OPEN_ACL_UNSAFE], zookeeper.SEQUENCE)
               
 if __name__ == '__main__':
-	gk = GraphKeeper()
-	
-	print 'Set up of GraphKeeper ...'
-	gk.set_up()
-	
-	gk.put_ng('/ng', '<http://data.example.org/person/tim> dc:publisher "Tim" .')
-	
-	(data, stat) = gk.get_ng('/ng-0') 
-	print data
+	if len(sys.argv) == 2: 
+		gk = GraphKeeper()
+		sink = ntriples.parseURI(sys.argv[1])
+
+	# print 'Set up of GraphKeeper ...'
+	# gk.set_up()
+	# 
+	# gk.put_ng('/ng', '<http://data.example.org/person/tim> dc:publisher "Tim" .')
+	# 
+	# (data, stat) = gk.get_ng('/ng-0') 
+	# print data
+	else: print __doc__
