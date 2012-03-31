@@ -6,7 +6,17 @@ Documentation:
   https://github.com/mhausenblas/graphkeeper
 """
 import zookeeper, threading, ntriples, urllib, sys
+try:
+    import json
+except ImportError:
+    import simplejson as json
 from pprint import pprint
+import logging
+_logger = logging.getLogger('gk')
+_logger.setLevel(logging.DEBUG)
+_handler = logging.StreamHandler()
+_handler.setFormatter(logging.Formatter('%(levelname)s::%(name)s: %(message)s'))
+_logger.addHandler(_handler)
 
 ZOO_OPEN_ACL_UNSAFE = {"perms":0x1f, "scheme":"world", "id" :"anyone"};
 
@@ -22,7 +32,7 @@ class GraphKeeper(object):
 			f = open('gk.log','w')
 			zookeeper.set_log_stream(f)
 		except IOError:
-			print "Couldn't open logfile for writing"
+			_logger.debug('Couldn\'t open logfile for writing')
 
 	
 	def set_up(self):
@@ -41,7 +51,13 @@ class GraphKeeper(object):
 			raise Exception("Couldn't connect to host -", self.host)
 
 		# set up the NG2znode look-up table:
-		zookeeper.create(self.handle, '/look-up', 'NOP', [ZOO_OPEN_ACL_UNSAFE], zookeeper.SEQUENCE)
+		if not zookeeper.exists(self.handle, '/look-up', None):
+			d = { 'default-graph' : '/dg' }
+			zookeeper.create(self.handle, '/look-up', json.dumps(d), [ZOO_OPEN_ACL_UNSAFE])
+		else:
+			(self.NG2znode, stat) = zookeeper.get(self.handle, '/look-up', None)
+			self.NG2znode =  json.loads(str(self.NG2znode))
+			_logger.debug('%s' %self.NG2znode['default-graph'])
 
 	
 	def shut_down(self):
@@ -57,7 +73,14 @@ class GraphKeeper(object):
 
 	# adds a named graph and overwrites the content in case it exists already
 	def put_ng(self, ng, val):
-		zookeeper.create(self.handle, ng, val, [ZOO_OPEN_ACL_UNSAFE], zookeeper.SEQUENCE)
+		# create the new znode that holds the graph data
+		payload = { 'graph' : ng , 'data' : val }
+		znode_id = zookeeper.create(self.handle, '/ng', json.dumps(payload), [ZOO_OPEN_ACL_UNSAFE], zookeeper.SEQUENCE)
+		# now update mNG2znode look-up table:
+		(self.NG2znode, stat) = zookeeper.get(self.handle, '/look-up', None)
+		self.NG2znode =  json.loads(str(self.NG2znode))
+		self.NG2znode[ng] = znode_id
+		zookeeper.set(self.handle, '/look-up', json.dumps(self.NG2znode))
 
 	def import_ng(self, uri):
 		pass

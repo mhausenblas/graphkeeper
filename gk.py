@@ -16,7 +16,7 @@ if __name__ == '__main__':
 		gk = GraphKeeper()
 		print 'Set up of GraphKeeper ...'
 		gk.set_up()
-		# gk.put_ng('/ng', '<http://data.example.org/person/tim> dc:publisher "Tim" .')
+		gk.put_ng('<http://data.example.org/person/tim>', '<http://data.example.org/person/tim> dc:publisher \'Tim\' .')
 		# (data, stat) = gk.get_ng('/ng-0') 
 		# print data
 	else: print __doc__
