@@ -1,6 +1,10 @@
 <http://dbpedia.org/resource/Galway>	<http://www.w3.org/2000/01/rdf-schema#label>	"Galway" .
-<http://dbpedia.org/resource/Galway>	<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>	<http://dbpedia.org/class/yago/CitiesInTheRepuBlicOfIreland> .
-<http://dbpedia.org/resource/Galway>	<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>	<http://dbpedia.org/class/yago/UniversityTowns> .
+<http://dbpedia.org/resource/Galway>	<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>	<http://dbpedia.org/ontology/Place> .
 <http://dbpedia.org/resource/Galway>	<http://www.georss.org/georss/point>	"53.27194444444444 -9.04888888888889"@en .
 <http://dbpedia.org/resource/Galway>	<http://www.w3.org/2000/01/rdf-schema#comment>	"Galway or City of Galway (Cathair na Gaillimhe) is a city in County Galway, Republic of Ireland. It is the fifth largest and the fastest-growing city in Ireland. It is also the third largest city within the Republic (although this is disputed by Limerick) and the only city in the Province of Connacht. Located on the west coast of Ireland, it sits on the River Corrib between Lough Corrib and Galway Bay. The population of Galway's urban area is 75,414 according to the 2011 census." .
 <http://dbpedia.org/resource/Galway>	<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>	<http://dbpedia.org/ontology/Place> .
+<http://dbpedia.org/resource/Galway>	<http://dbpedia.org/ontology/isPartOf>	<http://dbpedia.org/resource/Ireland> .
+<http://dbpedia.org/resource/Ireland>	<http://www.w3.org/2000/01/rdf-schema#label> "Ireland" .
+<http://dbpedia.org/resource/Ireland>	<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>	<http://dbpedia.org/ontology/Place> .
+<http://dbpedia.org/resource/Ireland>	<http://www.w3.org/2002/07/owl#sameAs>	<http://www4.wiwiss.fu-berlin.de/eurostat/resource/countries/Ireland> .
+<http://dbpedia.org/resource/Ireland>	<http://www.w3.org/2000/01/rdf-schema#comment>	"Ireland is the third-largest island in Europe and the twentieth-largest island in the world. It lies to the northwest of continental Europe and is surrounded by hundreds of islands and islets. To the east of Ireland is Great Britain, separated from it by the Irish Sea." .

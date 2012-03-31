@@ -1,14 +1,11 @@
 """
-GraphKeeper
+GraphKeeper, a simple RDF store in ZooKeeper.
 Michael Hausenblas, DERI
 Public Domain
 Documentation: 
   https://github.com/mhausenblas/graphkeeper
-
-Command line usage: 
-   python graphkeeper.py <URI> - parses data from URI as N-Triples and loads it into the store
 """
-import zookeeper, threading, ntriples, sys
+import zookeeper, threading, ntriples, urllib, sys
 from pprint import pprint
 
 ZOO_OPEN_ACL_UNSAFE = {"perms":0x1f, "scheme":"world", "id" :"anyone"};
@@ -43,6 +40,9 @@ class GraphKeeper(object):
 		if not self.connected:
 			raise Exception("Couldn't connect to host -", self.host)
 
+		# set up the NG2znode look-up table:
+		zookeeper.create(self.handle, '/look-up', 'NOP', [ZOO_OPEN_ACL_UNSAFE], zookeeper.SEQUENCE)
+
 	
 	def shut_down(self):
 		if self.connected:
@@ -58,17 +58,20 @@ class GraphKeeper(object):
 	# adds a named graph and overwrites the content in case it exists already
 	def put_ng(self, ng, val):
 		zookeeper.create(self.handle, ng, val, [ZOO_OPEN_ACL_UNSAFE], zookeeper.SEQUENCE)
-              
-if __name__ == '__main__':
-	if len(sys.argv) == 2: 
-		gk = GraphKeeper()
-		sink = ntriples.parseURI(sys.argv[1])
 
-	# print 'Set up of GraphKeeper ...'
-	# gk.set_up()
-	# 
-	# gk.put_ng('/ng', '<http://data.example.org/person/tim> dc:publisher "Tim" .')
-	# 
-	# (data, stat) = gk.get_ng('/ng-0') 
-	# print data
-	else: print __doc__
+	def import_ng(self, uri):
+		pass
+
+class GKSink(object): 
+	def __init__(self): 
+		self.length = 0
+
+	def triple(self, s, p, o): 
+		self.length += 1
+		print(self.length, s, p, o)
+
+if __name__ == '__main__':
+	parser = ntriples.NTriplesParser(sink=GKSink())
+	u = urllib.urlopen('test/dataset0.nt')
+	parser.parse(u)
+	u.close()

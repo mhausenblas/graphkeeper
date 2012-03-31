@@ -225,7 +225,6 @@ def parseURI(uri):
    u = urllib.urlopen(uri)
    sink = parser.parse(u)
    u.close()
-   return sink
 
 def main(): 
    import sys

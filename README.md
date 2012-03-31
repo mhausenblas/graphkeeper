@@ -23,7 +23,7 @@ To launch GraphKeeper you have to initially `chmod 755 gk-launch.sh` once and se
 
 Then you can try out GraphKeeper and you should see:
 
-	$ python graphkeeper.py
+	$ python gk.py
 	Set up of GraphKeeper ...
 	<http://data.example.org/person/tim> dc:publisher "Tim" .
 
