@@ -82,19 +82,38 @@ class GraphKeeper(object):
 		self.NG2znode[ng] = znode_id
 		zookeeper.set(self.handle, '/look-up', json.dumps(self.NG2znode))
 
-	def import_ng(self, uri):
-		pass
+	def import_dataset(self, uri):
+		parser = ntriples.NTriplesParser(sink=GKSink())
+		u = urllib.urlopen(uri)
+		s = parser.parse(u)
+		u.close()
+		
+		for ng in s.ng:
+			print ng
+			print s.ng[ng]
+			self.put_ng(ng, s.ng[ng])
 
 class GKSink(object): 
 	def __init__(self): 
 		self.length = 0
-
+		self.ng = {}
+	
+	def ser(self, s, p, o):
+		if type(s) == ntriples.URI: s = '<' + s + '>'
+		if type(p) == ntriples.URI: p = '<' + p + '>'
+		if type(o) == ntriples.URI: o = '<' + o + '>'
+		if type(o) == ntriples.Literal: o = '"' + o + '"'
+		return (s, p, o)
+		
 	def triple(self, s, p, o): 
 		self.length += 1
-		print(self.length, s, p, o)
-
+		(s, p, o) = self.ser(s, p, o)
+		if s in self.ng:
+			self.ng[s] = self.ng[s] + '\n' + s + ' ' + p + ' ' + o + ' .'
+		else:
+			self.ng[s] = s + ' ' + p + ' ' + o + ' .'
+		
 if __name__ == '__main__':
-	parser = ntriples.NTriplesParser(sink=GKSink())
-	u = urllib.urlopen('test/dataset0.nt')
-	parser.parse(u)
-	u.close()
+	gk = GraphKeeper()
+	gk.set_up()
+	gk.import_dataset('test/dataset0.nt')

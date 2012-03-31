@@ -21,12 +21,11 @@ To launch GraphKeeper you have to initially `chmod 755 gk-launch.sh` once and se
 	-n Starting zookeeper ... 
 	STARTED
 
-Then you can try out GraphKeeper and you should see:
+Then you can try out GraphKeeper by running:
 
-	$ python gk.py
+	$ python gk.py test/dataset0.nt 
 	Set up of GraphKeeper ...
-	<http://data.example.org/person/tim> dc:publisher "Tim" .
-
+	
 To shut down GraphKeeper you do `chmod 755 gk-shutdown.sh` once and then you can `./gk-shutdown.sh` it.
 
 ## Todo
